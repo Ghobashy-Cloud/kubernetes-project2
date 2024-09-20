@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: khaled55/backend:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: db-credentials
+              mountPath: /run/secrets  # Make sure this path matches where the backend is looking for the db-password file
+              subPath: db-password.txt  # Name the file specifically
+      volumes:
+        - name: db-credentials
+          hostPath:
+            path: /path/to/db-password.txt  # Update this to the correct path on your host machine where the file exists
+            type: File

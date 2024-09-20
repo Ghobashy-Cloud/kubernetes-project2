@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy
+  namespace: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+    spec:
+      containers:
+        - name: proxy
+          image: khaled55/proxy:latest  # Replace with your actual image
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: db-credentials
+              mountPath: /run/secrets
+      volumes:
+        - name: db-credentials
+          hostPath:
+            path: /path/to/db-password.txt  # Replace with actual path on host
